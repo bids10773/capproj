@@ -1,0 +1,15 @@
+import { Breadcrumbs } from '@/components/breadcrumbs';
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
+
+export function AppSidebarHeader({ breadcrumbs = [] }: { breadcrumbs?: BreadcrumbItemType[] }) {
+    return (
+        <header className="flex h-14 shrink-0 items-center gap-2 px-4 transition-all">
+            <div className="flex items-center gap-2">
+                <SidebarTrigger className="-ml-1 text-slate-500 hover:text-[#246AFE]" />
+                <div className="h-4 w-[1px] bg-slate-200 mx-1" />
+                <Breadcrumbs breadcrumbs={breadcrumbs} />
+            </div>
+        </header>
+    );
+}
