@@ -45,6 +45,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const adminNavItems: NavItem[] = [
         { title: 'Admin Overview', href: '/admin/dashboard', icon: ShieldCheck },
         { title: 'User Management', href: '/admin/users', icon: UsersIcon },
+        { title: 'Settings', href: '/settings/profile', icon: Settings },
     ];
 
     const userNavItems: NavItem[] = [

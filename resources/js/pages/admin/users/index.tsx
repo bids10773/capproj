@@ -4,6 +4,7 @@ import { Mail, Shield, User, MoreVertical, Search, Filter, Plus, Smartphone } fr
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
+
 export default function UserIndex({ users, filters }: any) {
 
     const [search, setSearch] = useState(filters.search || '');
@@ -53,6 +54,7 @@ export default function UserIndex({ users, filters }: any) {
                         </button>
                     </div>
                 </div>
+                
 
                 {/* TABLE */}
                 <div className="bg-white/40 backdrop-blur-md rounded-[2.5rem] border border-white/60 shadow-xl overflow-hidden w-full">
