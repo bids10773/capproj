@@ -52,28 +52,62 @@ export default function Profile({
                     >
                         {({ processing, recentlySuccessful, errors }) => (
                             <>
+                                {/* First Name */}
                                 <div className="grid gap-2">
-                                    <Label htmlFor="name">Name</Label>
-
+                                    <Label htmlFor="first_name">First Name</Label>
                                     <Input
-                                        id="name"
+                                        id="first_name"
                                         className="mt-1 block w-full"
-                                        defaultValue={auth.user.name}
-                                        name="name"
+                                        defaultValue={auth.user.first_name}
+                                        name="first_name"
                                         required
-                                        autoComplete="name"
-                                        placeholder="Full name"
+                                        autoComplete="given-name"
+                                        placeholder="First name"
                                     />
-
                                     <InputError
                                         className="mt-2"
-                                        message={errors.name}
+                                        message={errors.first_name}
                                     />
                                 </div>
 
+                                {/* Middle Name (optional) */}
+                                <div className="grid gap-2">
+                                    <Label htmlFor="middle_name">Middle Name</Label>
+                                    <Input
+                                        id="middle_name"
+                                        className="mt-1 block w-full"
+                                        defaultValue={auth.user.middle_name || ''}
+                                        name="middle_name"
+                                        autoComplete="additional-name"
+                                        placeholder="Middle name (optional)"
+                                    />
+                                    <InputError
+                                        className="mt-2"
+                                        message={errors.middle_name}
+                                    />
+                                </div>
+
+                                {/* Last Name */}
+                                <div className="grid gap-2">
+                                    <Label htmlFor="last_name">Last Name</Label>
+                                    <Input
+                                        id="last_name"
+                                        className="mt-1 block w-full"
+                                        defaultValue={auth.user.last_name}
+                                        name="last_name"
+                                        required
+                                        autoComplete="family-name"
+                                        placeholder="Last name"
+                                    />
+                                    <InputError
+                                        className="mt-2"
+                                        message={errors.last_name}
+                                    />
+                                </div>
+
+                                {/* Email */}
                                 <div className="grid gap-2">
                                     <Label htmlFor="email">Email address</Label>
-
                                     <Input
                                         id="email"
                                         type="email"
@@ -84,40 +118,36 @@ export default function Profile({
                                         autoComplete="username"
                                         placeholder="Email address"
                                     />
-
                                     <InputError
                                         className="mt-2"
                                         message={errors.email}
                                     />
                                 </div>
 
+                                {/* Email verification */}
                                 {mustVerifyEmail &&
                                     auth.user.email_verified_at === null && (
                                         <div>
                                             <p className="-mt-4 text-sm text-muted-foreground">
-                                                Your email address is
-                                                unverified.{' '}
+                                                Your email address is unverified.{' '}
                                                 <Link
                                                     href={send()}
                                                     as="button"
                                                     className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                                                 >
-                                                    Click here to resend the
-                                                    verification email.
+                                                    Click here to resend the verification email.
                                                 </Link>
                                             </p>
 
-                                            {status ===
-                                                'verification-link-sent' && (
+                                            {status === 'verification-link-sent' && (
                                                 <div className="mt-2 text-sm font-medium text-green-600">
-                                                    A new verification link has
-                                                    been sent to your email
-                                                    address.
+                                                    A new verification link has been sent to your email address.
                                                 </div>
                                             )}
                                         </div>
                                     )}
 
+                                {/* Save button */}
                                 <div className="flex items-center gap-4">
                                     <Button
                                         disabled={processing}

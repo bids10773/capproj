@@ -11,121 +11,255 @@ import { login } from '@/routes';
 import { store } from '@/routes/register';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ShieldCheck } from 'lucide-react';
-import PasswordInput from '@/components/ui/password-input';
-
+import { X, ShieldCheck, User, Mail, Phone, Lock, Eye, EyeOff } from 'lucide-react';
 
 export default function Register() {
-    const [showPasswords, setShowPasswords] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [showTermsModal, setShowTermsModal] = useState(false);
-
-    const togglePasswords = () => setShowPasswords(!showPasswords);
 
     return (
         <>
-            {/* [OUTSIDE] TERMS & PRIVACY MODAL - Breaking out of Layout containers */}
+            {/* TERMS & PRIVACY MODAL */}
             <AnimatePresence>
                 {showTermsModal && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-950/60 backdrop-blur-md"
+                    >
                         <motion.div 
-                            initial={{ opacity: 0 }} 
-                            animate={{ opacity: 1 }} 
-                            exit={{ opacity: 0 }}
-                            onClick={() => setShowTermsModal(false)}
-                            className="absolute inset-0 bg-gray-950/80 backdrop-blur-md"
-                        />
-                        <motion.div 
-                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                            className="relative w-full max-w-2xl bg-white rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden max-h-[85vh] z-[110]"
+                            initial={{ scale: 0.9, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.9, y: 20 }}
+                            className="relative w-full max-w-2xl bg-white rounded-[2rem] shadow-2xl shadow-blue-500/20 overflow-hidden"
                         >
-                            <div className="p-6 border-b flex items-center justify-between bg-blue-50/50">
-                                <div className="flex items-center gap-3 text-[#246AFE]">
-                                    <ShieldCheck className="h-6 w-6" />
-                                    <h2 className="text-xl font-bold text-gray-900">Terms & Privacy Policy</h2>
+                            <div className="p-6 border-b flex items-center justify-between bg-gradient-to-r from-blue-600 to-blue-700">
+                                <div className="flex items-center gap-3 text-white">
+                                    <ShieldCheck className="h-7 w-7" />
+                                    <h2 className="text-xl font-bold">Terms & Privacy Policy</h2>
                                 </div>
-                                <button onClick={() => setShowTermsModal(false)} className="p-2 hover:bg-gray-200 rounded-full transition-colors">
-                                    <X className="h-5 w-5 text-gray-500" />
+                                <button 
+                                    onClick={() => setShowTermsModal(false)} 
+                                    className="p-2 hover:bg-white/20 rounded-full transition-colors"
+                                >
+                                    <X className="h-5 w-5 text-white" />
                                 </button>
                             </div>
-                            <div className="p-8 overflow-y-auto text-gray-600 text-sm leading-relaxed space-y-4">
-                                <p className="font-bold text-gray-900 underline">Living Myth Industrial Clinic Data Privacy Agreement</p>
+                            <div className="p-8 overflow-y-auto text-gray-600 text-sm leading-relaxed space-y-4 max-h-[60vh]">
+                                <p className="font-bold text-gray-900 text-base">Living Myth Industrial Clinic Data Privacy Agreement</p>
                                 <p>By registering, you agree that your medical information will be handled in accordance with the <strong>Data Privacy Act of 2012 (RA 10173)</strong>.</p>
                                 <p>We collect your Name, Email, and Contact Number solely for medical record verification and appointment scheduling. Your data will never be shared with third parties without your explicit consent.</p>
                                 <p><strong>Disclaimer:</strong> This portal is for official industrial clinic use only. Unauthorized access is strictly prohibited.</p>
                                 <p><strong>Retention:</strong> Your data is stored securely and retained only for as long as necessary to provide clinical services or as required by Philippine Law.</p>
                             </div>
                             <div className="p-6 border-t bg-gray-50 flex justify-end">
-                                <Button onClick={() => setShowTermsModal(false)} variant="default" className="px-10 h-11">
-                                    I Understand
+                                <Button 
+                                    onClick={() => setShowTermsModal(false)} 
+                                    className="px-10 h-11 bg-[#246AFE] hover:bg-blue-700"
+                                >
+                                    I Understand & Accept
                                 </Button>
                             </div>
                         </motion.div>
-                    </div>
+                    </motion.div>
                 )}
             </AnimatePresence>
 
-            {/* MAIN CONTENT */}
             <AuthLayout
                 title="Create an account"
-                description="Enter your details below to create your account"
+                description="Join Living Myth Industrial Clinic today"
             >
                 <Head title="Register" />
-                <Form {...store.form()} resetOnSuccess={['password', 'password_confirmation']} className="flex flex-col gap-5">
+                
+                <Form 
+                    {...store.form()} 
+                    resetOnSuccess={['password', 'password_confirmation']} 
+                    className="flex flex-col gap-5"
+                >
                     {({ processing, errors }) => (
-                        <div className="grid gap-4">
-                            <div className="grid gap-1.5">
-                                <Label htmlFor="name">Name</Label>
-                                <Input id="name" name="name" required autoFocus tabIndex={1} placeholder="Full name" />
-                                <InputError message={errors.name} />
+                        <div className="space-y-5">
+                            {/* NAME FIELDS - 2 Columns */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="first_name" className="text-sm font-semibold text-gray-700">First Name</Label>
+                                    <div className="relative">
+                                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                        <Input 
+                                            id="first_name" 
+                                            name="first_name" 
+                                            required 
+                                            autoFocus 
+                                            tabIndex={1} 
+                                            placeholder="First name"
+                                            className="pl-10 h-11 border-gray-300 focus:border-[#246AFE] focus:ring-[#246AFE]" 
+                                        />
+                                    </div>
+                                    <InputError message={errors.first_name} />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="last_name" className="text-sm font-semibold text-gray-700">Last Name</Label>
+                                    <div className="relative">
+                                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                        <Input 
+                                            id="last_name" 
+                                            name="last_name" 
+                                            required 
+                                            tabIndex={3} 
+                                            placeholder="Last name"
+                                            className="pl-10 h-11 border-gray-300 focus:border-[#246AFE] focus:ring-[#246AFE]" 
+                                        />
+                                    </div>
+                                    <InputError message={errors.last_name} />
+                                </div>
                             </div>
 
-                            <div className="grid gap-1.5">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input id="email" type="email" name="email" required tabIndex={2} placeholder="email@example.com" />
+                            {/* Middle Name - Full Width */}
+                            <div className="space-y-2">
+                                <Label htmlFor="middle_name" className="text-sm font-semibold text-gray-700">Middle Name <span className="text-gray-400 font-normal">(Optional)</span></Label>
+                                <div className="relative">
+                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                    <Input 
+                                        id="middle_name" 
+                                        name="middle_name" 
+                                        tabIndex={2} 
+                                        placeholder="Middle name"
+                                        className="pl-10 h-11 border-gray-300 focus:border-[#246AFE] focus:ring-[#246AFE]" 
+                                    />
+                                </div>
+                                <InputError message={errors.middle_name} />
+                            </div>
+
+                            {/* Email */}
+                            <div className="space-y-2">
+                                <Label htmlFor="email" className="text-sm font-semibold text-gray-700">Email Address</Label>
+                                <div className="relative">
+                                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                    <Input 
+                                        id="email" 
+                                        type="email" 
+                                        name="email" 
+                                        required 
+                                        tabIndex={4} 
+                                        placeholder="email@example.com"
+                                        className="pl-10 h-11 border-gray-300 focus:border-[#246AFE] focus:ring-[#246AFE]" 
+                                    />
+                                </div>
                                 <InputError message={errors.email} />
                             </div>
 
-                            <div className="grid gap-1.5">
-                                <Label htmlFor="contact">Contact No.</Label>
-                                <Input id="contact" type="tel" name="contact" required tabIndex={3} placeholder="+639*********" />
+                            {/* Contact Number */}
+                            <div className="space-y-2">
+                                <Label htmlFor="contact" className="text-sm font-semibold text-gray-700">Contact Number</Label>
+                                <div className="relative">
+                                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                    <Input 
+                                        id="contact" 
+                                        type="tel" 
+                                        name="contact" 
+                                        required 
+                                        tabIndex={5} 
+                                        placeholder="+639*********"
+                                        className="pl-10 h-11 border-gray-300 focus:border-[#246AFE] focus:ring-[#246AFE]" 
+                                    />
+                                </div>
                                 <InputError message={errors.contact} />
                             </div>
 
-                            <div className="grid gap-1.5">
-                                <Label htmlFor="password">Password</Label>
-                                <Input id="password" name="password" type={showPasswords ? "text" : "password"} required tabIndex={4} placeholder="Enter password" />
-                                <InputError message={errors.password} />
-                            </div>
-
-                            <div className="grid gap-1.5">
-                                <Label htmlFor="password_confirmation">Confirm password</Label>
-                                <Input id="password_confirmation" name="password_confirmation" type={showPasswords ? "text" : "password"} required tabIndex={5} placeholder="Confirm password" />
-                                <InputError message={errors.password_confirmation} />
-                            </div>
-
-                            {/* TIGHT GROUP: SHOW PASSWORDS & TERMS */}
-                            <div className="flex flex-col space-y-3 mt-1">
-                                <div className="flex items-center space-x-2 ml-1">
-                                    <Checkbox id="show-passwords" checked={showPasswords} onCheckedChange={togglePasswords} tabIndex={6} />
-                                    <Label htmlFor="show-passwords" className="text-[10px] font-bold text-white uppercase tracking-widest cursor-pointer opacity-80">Show Passwords</Label>
+                            {/* Password & Confirm Password */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="password" className="text-sm font-semibold text-gray-700">Password</Label>
+                                    <div className="relative">
+                                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                        <Input 
+                                            id="password" 
+                                            name="password" 
+                                            type={showPassword ? "text" : "password"} 
+                                            required 
+                                            tabIndex={6} 
+                                            placeholder="Password"
+                                            className="pl-10 pr-10 h-11 border-gray-300 focus:border-[#246AFE] focus:ring-[#246AFE]" 
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                        >
+                                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                        </button>
+                                    </div>
+                                    <InputError message={errors.password} />
                                 </div>
 
-                                <div className="flex items-start space-x-3 ml-1">
-                                    <Checkbox id="terms" name="terms" required tabIndex={7} />
-                                    <Label htmlFor="terms" className="text-[11px] font-medium text-white/90 leading-tight">
-                                        I agree to the <button type="button" onClick={() => setShowTermsModal(true)} className="font-bold underline hover:text-white transition-colors">Terms & Privacy Policy</button>
-                                    </Label>
+                                <div className="space-y-2">
+                                    <Label htmlFor="password_confirmation" className="text-sm font-semibold text-gray-700">Confirm Password</Label>
+                                    <div className="relative">
+                                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                        <Input 
+                                            id="password_confirmation" 
+                                            name="password_confirmation" 
+                                            type={showPassword ? "text" : "password"} 
+                                            required 
+                                            tabIndex={7} 
+                                            placeholder="Confirm"
+                                            className="pl-10 h-11 border-gray-300 focus:border-[#246AFE] focus:ring-[#246AFE]" 
+                                        />
+                                    </div>
+                                    <InputError message={errors.password_confirmation} />
                                 </div>
                             </div>
 
-                            <Button type="submit" variant="secondary" className="w-full mt-4 font-bold h-11" tabIndex={8} disabled={processing}>
-                                {processing ? <Spinner className="text-[#246AFE]" /> : "Create account"}
-                            </Button>
+                            {/* Terms Checkbox */}
+                            <div className="flex items-start space-x-3 pt-2">
+                                <Checkbox 
+                                    id="terms" 
+                                    name="terms" 
+                                    required 
+                                    tabIndex={8}
+                                    className="mt-0.5 data-[state=checked]:bg-[#246AFE] data-[state=checked]:border-[#246AFE]" 
+                                />
+                                <Label htmlFor="terms" className="text-sm text-gray-600 leading-tight">
+                                    I agree to the{' '}
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setShowTermsModal(true)} 
+                                        className="text-[#246AFE] font-semibold hover:underline"
+                                    >
+                                        Terms & Privacy Policy
+                                    </button>
+                                </Label>
+                            </div>
 
-                            <div className="text-center text-sm text-white mt-2">
-                                Already have an account? <TextLink href={login()} className="font-bold underline">Log in</TextLink>
+                            {/* Submit Button */}
+                            <motion.div
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <Button 
+                                    type="submit" 
+                                    className="w-full h-12 bg-[#246AFE] hover:bg-blue-700 text-white font-bold text-base rounded-xl shadow-lg shadow-blue-500/25 transition-all"
+                                    tabIndex={9} 
+                                    disabled={processing}
+                                >
+                                    {processing ? (
+                                        <Spinner className="text-white" />
+                                    ) : (
+                                        <span>Create Account</span>
+                                    )}
+                                </Button>
+                            </motion.div>
+
+                            {/* Login Link */}
+                            <div className="text-center text-sm text-gray-600 pt-2">
+                                Already have an account?{' '}
+                                <TextLink 
+                                    href={login()} 
+                                    className="text-[#246AFE] font-bold hover:underline"
+                                >
+                                    Sign in
+                                </TextLink>
                             </div>
                         </div>
                     )}

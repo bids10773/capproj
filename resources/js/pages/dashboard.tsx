@@ -50,7 +50,7 @@ export default function Welcome() {
                                         onClick={() => setDropdownOpen(!dropdownOpen)}
                                         className="flex items-center justify-center w-10 h-10 bg-blue-600 rounded-full border-2 border-white/50 font-bold hover:bg-blue-700 transition-all"
                                     >
-                                        {getInitial(auth.user.name)}
+                                        {getInitial(auth.user.full_name)}
                                     </button>
 
                                     <AnimatePresence>
@@ -68,7 +68,7 @@ export default function Welcome() {
                         Active Account
                     </span>
                     <span className="text-sm font-bold text-gray-900 truncate">
-                        {auth.user.name}
+                        {auth.user.full_name}
                     </span>
                     <span className="text-xs text-gray-500 truncate font-medium">
                         {auth.user.email}

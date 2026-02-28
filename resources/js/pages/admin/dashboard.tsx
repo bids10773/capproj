@@ -14,7 +14,7 @@ export default function Dashboard() {
             {/* WELCOME SECTION */}
             <div className="mb-8">
                 <h1 className="text-3xl font-black text-gray-900 tracking-tight">
-                    Welcome back, <span className="text-[#246AFE]">{auth.user.name}</span>
+                    Welcome back, <span className="text-[#246AFE]">{auth.user.full_name}</span>
                 </h1>
                 <p className="text-gray-500 mt-1">Here is what is happening at the clinic today.</p>
             </div>

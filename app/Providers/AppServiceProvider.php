@@ -35,9 +35,9 @@ class AppServiceProvider extends ServiceProvider
 
             return (new MailMessage)
                 ->subject('Welcome to LMC Clinic - Verify Your Account')
-                ->view('emails.custom-verify', [
+->view('emails.custom-verify', [
                     'url' => $url,
-                    'name' => $notifiable->name,
+                    'name' => $notifiable->full_name,
                     'logo' => $logoData,
                     'expire_message' => 'For your security, this link is only valid for 5 minutes.',
                 ]);
@@ -54,9 +54,9 @@ class AppServiceProvider extends ServiceProvider
             return (new MailMessage)
                 ->subject('LMIC Company - Reset Your Password')
                 // You can reuse a similar layout for the reset email
-                ->view('emails.custom-reset', [
+->view('emails.custom-reset', [
                     'url' => $url,
-                    'name' => $notifiable->name,
+                    'name' => $notifiable->full_name,
                     'expire_message' => 'This password reset link will expire in 60 minutes.',
                 ]);
         });

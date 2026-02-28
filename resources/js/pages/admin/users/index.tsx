@@ -79,11 +79,11 @@ export default function UserIndex({ users, filters }: any) {
                                     >
                                         <td className="px-6 py-5 rounded-l-3xl">
                                             <div className="flex items-center gap-4">
-                                                <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#246AFE] to-blue-700 flex items-center justify-center text-white font-black text-lg shadow-lg">
-                                                    {user.name.charAt(0)}
+<div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#246AFE] to-blue-700 flex items-center justify-center text-white font-black text-lg shadow-lg">
+                                                    {user.full_name.charAt(0)}
                                                 </div>
                                                 <div>
-                                                    <div className="font-bold text-gray-900 text-base">{user.name}</div>
+                                                    <div className="font-bold text-gray-900 text-base">{user.full_name}</div>
                                                     <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
                                                         Patient ID: #LMC-{user.id + 1000}
                                                     </div>
