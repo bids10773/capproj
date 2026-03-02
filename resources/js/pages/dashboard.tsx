@@ -1,15 +1,17 @@
-import { Head, Link, usePage } from '@inertiajs/react'; // Added usePage
+import { Head, Link, usePage } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion'; 
-import { useState } from 'react'; // Added useState for dropdown
+import { useState } from 'react';
 import bgimage from '/public/images/bgpic.jpg';
 import heroimage from '/public/images/Doctor.png';
 import smallimage from '/public/images/smallpic.jpg';
 import logo from '/public/images/full_logo.png';
+import { useLogoutModal } from '@/contexts/logout-modal-context';
 
 
 export default function Welcome() {
-    const { auth } = usePage().props as any; // Get auth data from Inertia
+    const { auth } = usePage().props as any;
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const { openModal } = useLogoutModal();
 
     // Helper to get first letter of name
     const getInitial = (name: string) => name ? name.charAt(0).toUpperCase() : 'U';
@@ -61,44 +63,43 @@ export default function Welcome() {
                                                 exit={{ opacity: 0, y: 10 }}
                                                 className="absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-xl py-2 text-gray-800 border border-gray-100"
                                             >
-                                                  {/* 1. USER INFORMATION HEADER (The part you wanted) */}
-            <div className="px-5 py-3 mb-2 border-b border-gray-100 bg-gray-50/50">
-                <div className="flex flex-col">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 mb-1">
-                        Active Account
-                    </span>
-                    <span className="text-sm font-bold text-gray-900 truncate">
-                        {auth.user.full_name}
-                    </span>
-                    <span className="text-xs text-gray-500 truncate font-medium">
-                        {auth.user.email}
-                    </span>
-                </div>
-            </div>
-                                                 {/* 2. NAVIGATION LINKS */}
-            <div className="px-2 space-y-1">
-                <Link 
-                    href="/settings/profile" 
-                    className="flex items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors"
-                >
-                    Account Settings
-                </Link>
-            </div>
+                                                {/* 1. USER INFORMATION HEADER */}
+                                                <div className="px-5 py-3 mb-2 border-b border-gray-100 bg-gray-50/50">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 mb-1">
+                                                            Active Account
+                                                        </span>
+                                                        <span className="text-sm font-bold text-gray-900 truncate">
+                                                            {auth.user.full_name}
+                                                        </span>
+                                                        <span className="text-xs text-gray-500 truncate font-medium">
+                                                            {auth.user.email}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                
+                                                {/* 2. NAVIGATION LINKS */}
+                                                <div className="px-2 space-y-1">
+                                                    <Link 
+                                                        href="/settings/profile" 
+                                                        className="flex items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors"
+                                                    >
+                                                        Account Settings
+                                                    </Link>
+                                                </div>
 
-            {/* 3. LOGOUT SECTION */}
-            <div className="mt-2 pt-2 border-t border-gray-100 px-2">
-                <Link 
-                    href="/logout"
-                    method="post" 
-                    as="button" 
-                    className="w-full text-left px-3 py-2 text-sm font-bold text-red-600 rounded-lg hover:bg-red-50 transition-colors"
-                >
-                    Sign Out
-                </Link>
-            </div>
-        </motion.div>
-    )}
-</AnimatePresence>
+                                                {/* 3. LOGOUT SECTION */}
+                                                <div className="mt-2 pt-2 border-t border-gray-100 px-2">
+                                                    <button 
+                                                        onClick={openModal}
+                                                        className="w-full text-left px-3 py-2 text-sm font-bold text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                                                    >
+                                                        Sign Out
+                                                    </button>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                             ) : (
                                 <Link

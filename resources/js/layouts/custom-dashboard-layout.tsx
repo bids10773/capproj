@@ -8,7 +8,6 @@ export default function ClinicDashboardLayout({ children, breadcrumbs = [] }: Ap
     return (
         /* 1. WRAPPER BACKGROUND (The Gap/Sidebar color) */
         <SidebarProvider className="bg-white min-h-screen">
-            
             {/* 2. SIDEBAR - We remove the 'variant' prop to stop the error */}
             {/* We use a standard Tailwind class for the border instead */}
             <AppSidebar className="border-r border-blue-100 bg-transparent" />
