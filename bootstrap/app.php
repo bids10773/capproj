@@ -25,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Put your alias here inside the same function
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'staff.verified' => \App\Http\Middleware\StaffVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

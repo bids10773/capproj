@@ -29,7 +29,12 @@ import type { NavItem } from '@/types';
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { auth } = usePage().props as any;
     const { url } = usePage(); // Get current URL for focus effect
-    const isAdmin = auth.user.role === 'admin';
+    const role = auth.user.role;
+    const isAdmin = role === 'admin';
+    const isDoctor = role === 'doctor';
+    const isMedTech = role === 'medtech';
+    const isRadTech = role === 'radtech';
+    const isStaff = isAdmin || isDoctor || isMedTech || isRadTech;
     
     // 1. Real-time Clock
     const [time, setTime] = useState(new Date());
@@ -48,6 +53,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         { title: 'Settings', href: '/settings/profile', icon: Settings },
     ];
 
+    const doctorNavItems: NavItem[] = [
+        { title: 'Doctor Dashboard', href: '/doctor/dashboard', icon: LayoutGrid },
+        { title: 'Appointments', href: '/doctor/appointments', icon: Calendar },
+        { title: 'Patients', href: '/doctor/patients', icon: UsersIcon },
+        { title: 'Medical Records', href: '/records', icon: HeartPulse },
+        { title: 'Settings', href: '/settings/profile', icon: Settings },
+    ];
+
+    const medtechNavItems: NavItem[] = [
+        { title: 'MedTech Dashboard', href: '/medtech/dashboard', icon: LayoutGrid },
+        { title: 'Lab Requests', href: '/medtech/lab-requests', icon: Activity },
+        { title: 'Test Results', href: '/medtech/results', icon: HeartPulse },
+        { title: 'Settings', href: '/settings/profile', icon: Settings },
+    ];
+
+    const radtechNavItems: NavItem[] = [
+        { title: 'RadTech Dashboard', href: '/radtech/dashboard', icon: LayoutGrid },
+        { title: 'Imaging Scans', href: '/radtech/scans', icon: Activity },
+        { title: 'View Images', href: '/radtech/images', icon: HeartPulse },
+        { title: 'Settings', href: '/settings/profile', icon: Settings },
+    ];
+
     const userNavItems: NavItem[] = [
         { title: 'Dashboard', href: '/dashboard', icon: LayoutGrid },
         { title: 'Appointments', href: '/appointments', icon: Calendar },
@@ -55,7 +82,36 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         { title: 'Settings', href: '/settings/profile', icon: Settings },
     ];
 
-    const activeNavItems = isAdmin ? adminNavItems : userNavItems;
+    // Select navigation items based on role
+    let activeNavItems: NavItem[];
+    if (isAdmin) {
+        activeNavItems = adminNavItems;
+    } else if (isDoctor) {
+        activeNavItems = doctorNavItems;
+    } else if (isMedTech) {
+        activeNavItems = medtechNavItems;
+    } else if (isRadTech) {
+        activeNavItems = radtechNavItems;
+    } else {
+        activeNavItems = userNavItems;
+    }
+
+    // Get portal label
+    const getPortalLabel = () => {
+        if (isAdmin) return 'Admin Portal';
+        if (isDoctor) return 'Doctor Portal';
+        if (isMedTech) return 'MedTech Portal';
+        if (isRadTech) return 'RadTech Portal';
+        return 'Patient Portal';
+    };
+
+    const getDashboardHref = () => {
+        if (isAdmin) return '/admin/dashboard';
+        if (isDoctor) return '/doctor/dashboard';
+        if (isMedTech) return '/medtech/dashboard';
+        if (isRadTech) return '/radtech/dashboard';
+        return '/dashboard';
+    };
 
     return (
         <Sidebar 
@@ -68,7 +124,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <div className="flex flex-col items-center gap-4">
-                            <Link href={isAdmin ? '/admin/dashboard' : '/dashboard'} className="group-data-[collapsible=icon]:hidden px-4">
+                            <Link href={getDashboardHref()} className="group-data-[collapsible=icon]:hidden px-4">
                                 <motion.div whileHover={{ scale: 1.05 }} className="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl">
                                     <img src={logo} alt="LMC Logo" className="h-10 w-auto object-contain brightness-110" />
                                 </motion.div>
@@ -89,7 +145,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                         <Clock className="size-3 text-blue-300" />
                                         <span className="text-[11px] font-mono font-bold text-white tabular-nums tracking-wider">{formattedTime}</span>
                                     </div>
-                                    <p className="text-[10px] font-bold text-blue-200/70 capitalize text-center mt-2 tracking-widest">{auth.user.role} PORTAL</p>
+                                    <p className="text-[10px] font-bold text-blue-200/70 capitalize text-center mt-2 tracking-widest">{getPortalLabel()}</p>
                                 </div>
                             </div>
                         </div>

@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 class CreateDoctor
 {
     /**
-     * Validate and create a new doctor.
+     * Validate and create a new user (doctor, radtech, or medtech).
      *
      * @param  array<string, string>  $input
      */
@@ -24,12 +24,14 @@ class CreateDoctor
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'contact' => ['required', 'string', 'max:20'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', 'string', 'in:doctor,radtech,medtech'],
         ], [
             'email.unique' => 'This email is already registered.',
             'password.confirmed' => 'The password confirmation does not match.',
+            'role.in' => 'Please select a valid role.',
         ])->validate();
 
-        // Create doctor with pre-verified email
+        // Create user with pre-verified email
         return User::create([
             'first_name' => $input['first_name'],
             'middle_name' => $input['middle_name'] ?? null,
@@ -37,7 +39,7 @@ class CreateDoctor
             'email' => $input['email'],
             'contact' => $input['contact'],
             'password' => Hash::make($input['password']),
-            'role' => 'doctor',
+            'role' => $input['role'],
             'email_verified_at' => now(), // Pre-verified as per requirement
         ]);
     }

@@ -23,7 +23,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 });
 
 // 2. Standard User Routes
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         // FIX: If an Admin lands here (e.g., reopening a tab), send them to Admin Dashboard
         if (Auth::user()->role === 'admin') {
@@ -32,6 +32,32 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         return Inertia::render('dashboard');
     })->name('dashboard');
+
+    // Doctor Dashboard - uses staff.verified middleware to allow admin-created staff
+    Route::middleware(['staff.verified'])->group(function () {
+        Route::get('/doctor/dashboard', function () {
+            if (Auth::user()->role !== 'doctor') {
+                return redirect()->route('dashboard');
+            }
+            return Inertia::render('doctor/dashboard');
+        })->name('doctor.dashboard');
+
+        // MedTech Dashboard
+        Route::get('/medtech/dashboard', function () {
+            if (Auth::user()->role !== 'medtech') {
+                return redirect()->route('dashboard');
+            }
+            return Inertia::render('medtech/dashboard');
+        })->name('medtech.dashboard');
+
+        // RadTech Dashboard
+        Route::get('/radtech/dashboard', function () {
+            if (Auth::user()->role !== 'radtech') {
+                return redirect()->route('dashboard');
+            }
+            return Inertia::render('radtech/dashboard');
+        })->name('radtech.dashboard');
+    });
 });
 
 require __DIR__.'/settings.php';

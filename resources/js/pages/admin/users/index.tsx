@@ -18,6 +18,7 @@ export default function UserIndex({ users, filters }: any) {
         contact: '',
         password: '',
         password_confirmation: '',
+        role: 'doctor',
     });
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -206,11 +207,15 @@ export default function UserIndex({ users, filters }: any) {
                             <div className="flex items-center justify-between p-6 border-b border-gray-100">
                                 <div className="flex items-center gap-3">
                                     <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#246AFE] to-blue-700 flex items-center justify-center text-white font-black shadow-lg">
-                                        <Stethoscope className="w-6 h-6" />
+                                        {data.role === 'doctor' && <Stethoscope className="w-6 h-6" />}
+                                        {data.role === 'radtech' && <Shield className="w-6 h-6" />}
+                                        {data.role === 'medtech' && <User className="w-6 h-6" />}
                                     </div>
                                     <div>
-                                        <h2 className="text-xl font-black text-gray-900">Add New Doctor</h2>
-                                        <p className="text-sm text-gray-500 font-medium">Create a verified doctor account</p>
+                                        <h2 className="text-xl font-black text-gray-900">
+                                            Add New {data.role === 'doctor' ? 'Doctor' : data.role === 'radtech' ? 'RadTech' : 'MedTech'}
+                                        </h2>
+                                        <p className="text-sm text-gray-500 font-medium">Create a verified {data.role} account</p>
                                     </div>
                                 </div>
                                 <button 
@@ -299,6 +304,50 @@ export default function UserIndex({ users, filters }: any) {
                                     {errors.contact && <p className="text-red-500 text-xs">{errors.contact}</p>}
                                 </div>
 
+                                {/* Role Selection */}
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Select Role *</label>
+                                    <div className="grid grid-cols-3 gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => setData('role', 'doctor')}
+                                            className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
+                                                data.role === 'doctor'
+                                                    ? 'border-[#246AFE] bg-blue-50 text-[#246AFE]'
+                                                    : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                                            }`}
+                                        >
+                                            <Stethoscope className="w-6 h-6" />
+                                            <span className="text-xs font-bold uppercase tracking-wider">Doctor</span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setData('role', 'radtech')}
+                                            className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
+                                                data.role === 'radtech'
+                                                    ? 'border-[#246AFE] bg-blue-50 text-[#246AFE]'
+                                                    : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                                            }`}
+                                        >
+                                            <Shield className="w-6 h-6" />
+                                            <span className="text-xs font-bold uppercase tracking-wider">RadTech</span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setData('role', 'medtech')}
+                                            className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
+                                                data.role === 'medtech'
+                                                    ? 'border-[#246AFE] bg-blue-50 text-[#246AFE]'
+                                                    : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                                            }`}
+                                        >
+                                            <User className="w-6 h-6" />
+                                            <span className="text-xs font-bold uppercase tracking-wider">MedTech</span>
+                                        </button>
+                                    </div>
+                                    {errors.role && <p className="text-red-500 text-xs">{errors.role}</p>}
+                                </div>
+
                                 {/* Password */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="space-y-1">
@@ -340,7 +389,7 @@ export default function UserIndex({ users, filters }: any) {
                                         type="submit"
                                         className="px-6 py-3 bg-[#246AFE] text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 hover:translate-y-[-2px] active:scale-95 transition-all"
                                     >
-                                        Create Doctor
+                                        Create {data.role === 'doctor' ? 'Doctor' : data.role === 'radtech' ? 'RadTech' : 'MedTech'}
                                     </button>
                                 </div>
                             </form>

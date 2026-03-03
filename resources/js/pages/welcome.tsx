@@ -9,10 +9,36 @@ export default function Welcome() {
     const { auth } = usePage().props as any;
     
     // Determine the correct link based on user role
-    const getAuthenticatedLink = () => {
+    const getDashboardLink = () => {
         if (!auth?.user) return "/login";
-        // Redirect admins to admin dashboard, regular users to appointments
-        return auth.user.role === 'admin' ? "/admin/dashboard" : "/appointments";
+        const role = auth.user.role;
+        if (role === 'admin') return "/admin/dashboard";
+        if (role === 'doctor') return "/doctor/dashboard";
+        if (role === 'medtech') return "/medtech/dashboard";
+        if (role === 'radtech') return "/radtech/dashboard";
+        return "/dashboard";
+    };
+
+    // Get button text based on role
+    const getButtonText = () => {
+        if (!auth?.user) return "Login";
+        const role = auth.user.role;
+        if (role === 'admin') return "Admin";
+        if (role === 'doctor') return "Doctor";
+        if (role === 'medtech') return "MedTech";
+        if (role === 'radtech') return "RadTech";
+        return "Dashboard";
+    };
+
+    // Get main CTA text based on role
+    const getCTAText = () => {
+        if (!auth?.user) return "Make An Appointment";
+        const role = auth.user.role;
+        if (role === 'admin') return "Go to Admin Dashboard";
+        if (role === 'doctor') return "Go to Doctor Dashboard";
+        if (role === 'medtech') return "Go to MedTech Dashboard";
+        if (role === 'radtech') return "Go to RadTech Dashboard";
+        return "Book an Appointment";
     };
     
     return (
@@ -59,10 +85,10 @@ export default function Welcome() {
 
                         {/* Right Side: Login/Admin Button */}
                         <Link
-                            href={auth?.user ? (auth.user.role === 'admin' ? "/admin/dashboard" : "/dashboard") : "/login"}
+                            href={getDashboardLink()}
                             className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-all shadow-md font-medium"
                         >
-                            {auth?.user ? (auth.user.role === 'admin' ? "Admin" : "Dashboard") : "Login"}
+                            {getButtonText()}
                         </Link>
                     </div>
                 </motion.nav>
@@ -86,10 +112,10 @@ export default function Welcome() {
                         </h1>
 
                         <Link
-                            href={getAuthenticatedLink()}
+                            href={getDashboardLink()}
                             className="inline-block mt-6 px-8 py-3 bg-blue-500 rounded-full hover:bg-blue-600 transition shadow-lg font-semibold text-white"
                         >
-                            {auth?.user ? (auth.user.role === 'admin' ? "Go to Admin Dashboard" : "Book an Appointment") : "Make An Appointment"}
+                            {getCTAText()}
                         </Link>
 
                         {/* STATS CARD - Pop up animation */}

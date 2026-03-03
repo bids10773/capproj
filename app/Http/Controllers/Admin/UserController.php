@@ -37,9 +37,12 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $doctor = app(CreateDoctor::class)->create($request->all());
+        $role = $request->input('role', 'doctor');
+        $roleLabel = ucfirst($role);
+        
+        $user = app(CreateDoctor::class)->create($request->all());
 
         return redirect()->route('admin.users')
-            ->with('success', "Doctor {$doctor->full_name} has been created and verified successfully.");
+            ->with('success', "{$roleLabel} {$user->full_name} has been created and verified successfully.");
     }
 }
