@@ -7,6 +7,14 @@ import logo from '/public/images/full_logo.png';
 
 export default function Welcome() {
     const { auth } = usePage().props as any;
+    
+    // Determine the correct link based on user role
+    const getAuthenticatedLink = () => {
+        if (!auth?.user) return "/login";
+        // Redirect admins to admin dashboard, regular users to appointments
+        return auth.user.role === 'admin' ? "/admin/dashboard" : "/appointments";
+    };
+    
     return (
         <>
             <Head title="Welcome">
@@ -34,39 +42,29 @@ export default function Welcome() {
                     initial={{ y: -100 }}
                     animate={{ y: 0 }}
                     transition={{ type: 'spring', stiffness: 50, delay: 0.2 }}
-                    className="fixed top-0 left-0 w-full z-50 flex justify-center pt-6"
+                    className="fixed top-0 left-0 w-full z-50 flex justify-center pt-6 px-10"
                 >
-                   {/* NAVBAR - Now includes Login button */}
-<motion.nav 
-    initial={{ y: -100 }}
-    animate={{ y: 0 }}
-    transition={{ type: 'spring', stiffness: 50, delay: 0.2 }}
-    className="fixed top-0 left-0 w-full z-50 flex justify-center pt-6 px-10" // added px-10 for outer spacing
->
-    <div className="flex items-center justify-between w-full max-w-7xl px-8 py-4 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg text-white">
-        
-        {/* Left Side: Logo & Links */}
-        <div className="flex items-center gap-10">
-            <img src={logo} alt="LMC Logo" className="h-10 w-auto" />
-            <div className="hidden md:flex gap-8">
-                <Link href="#home" className="hover:text-blue-300 transition-colors">Home</Link>
-                <Link href="#about" className="hover:text-blue-300 transition-colors">About</Link>
-                <Link href="#services" className="hover:text-blue-300 transition-colors">Services</Link>
-                <Link href="#appointments" className="hover:text-blue-300 transition-colors">Appointments</Link>
-            </div>
-        </div>
+                    <div className="flex items-center justify-between w-full max-w-7xl px-8 py-4 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg text-white">
+                        
+                        {/* Left Side: Logo & Links */}
+                        <div className="flex items-center gap-10">
+                            <img src={logo} alt="LMC Logo" className="h-10 w-auto" />
+                            <div className="hidden md:flex gap-8">
+                                <Link href="#home" className="hover:text-blue-300 transition-colors">Home</Link>
+                                <Link href="#about" className="hover:text-blue-300 transition-colors">About</Link>
+                                <Link href="#services" className="hover:text-blue-300 transition-colors">Services</Link>
+                                <Link href="#appointments" className="hover:text-blue-300 transition-colors">Appointments</Link>
+                            </div>
+                        </div>
 
-        {/* Right Side: Login Button */}
-        <Link
-            href="/login"
-            className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-all shadow-md font-medium"
-        >
-            Login
-        </Link>
-    </div>
-</motion.nav>
-
-                    
+                        {/* Right Side: Login/Admin Button */}
+                        <Link
+                            href={auth?.user ? (auth.user.role === 'admin' ? "/admin/dashboard" : "/dashboard") : "/login"}
+                            className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-all shadow-md font-medium"
+                        >
+                            {auth?.user ? (auth.user.role === 'admin' ? "Admin" : "Dashboard") : "Login"}
+                        </Link>
+                    </div>
                 </motion.nav>
 
                 {/* LEFT CONTENT - Slide in from Left */}
@@ -88,11 +86,11 @@ export default function Welcome() {
                         </h1>
 
                         <Link
-    href={auth?.user ? "/appointments" : "/login"} 
-    className="inline-block mt-6 px-8 py-3 bg-blue-500 rounded-full hover:bg-blue-600 transition shadow-lg font-semibold text-white"
->
-    {auth?.user ? "Book an Appointment" : "Make An Appointment"}
-</Link>
+                            href={getAuthenticatedLink()}
+                            className="inline-block mt-6 px-8 py-3 bg-blue-500 rounded-full hover:bg-blue-600 transition shadow-lg font-semibold text-white"
+                        >
+                            {auth?.user ? (auth.user.role === 'admin' ? "Go to Admin Dashboard" : "Book an Appointment") : "Make An Appointment"}
+                        </Link>
 
                         {/* STATS CARD - Pop up animation */}
                         <motion.div 
