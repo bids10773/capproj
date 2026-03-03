@@ -1,12 +1,12 @@
-# TODO - Admin Create Doctors Feature
+# TODO - Create Doctor Role Feature
 
-## Backend (PHP)
-- [ ] 1. Create database migration for medical_field column
-- [ ] 2. Update User Model to include medical_field in $fillable
-- [ ] 3. Create Admin Action: CreateDoctor.php
-- [ ] 4. Update UserController with store method
-- [ ] 5. Update Routes with POST route for creating doctors
+## Plan Steps:
+- [x] 1. Add `store` method in UserController to handle creating doctors
+- [x] 2. Add POST route in web.php for creating doctors
+- [x] 3. Create Doctor creation form/modal in frontend (admin/users/index.tsx)
+- [x] 4. Remove medical_field from CreateDoctor action and frontend form
 
-## Frontend (React/TypeScript)
-- [ ] 6. Create CreateDoctorModal component
-- [ ] 7. Update Admin Users Page to integrate modal
+## Implementation Notes:
+- The CreateDoctor action auto-verifies doctors by setting `email_verified_at` to `now()`
+- Admin role is already set up in the system
+- Medical field has been removed per user request

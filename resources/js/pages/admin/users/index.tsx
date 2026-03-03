@@ -1,13 +1,24 @@
 import ClinicDashboardLayout from '@/layouts/custom-dashboard-layout';
-import { Head, Link, router } from '@inertiajs/react';
-import { Mail, Shield, User, MoreVertical, Search, Filter, Plus, Smartphone } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import { Mail, Shield, User, MoreVertical, Search, Filter, Plus, Smartphone, X, Stethoscope } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 
 
 export default function UserIndex({ users, filters }: any) {
 
     const [search, setSearch] = useState(filters.search || '');
+    const [showModal, setShowModal] = useState(false);
+
+    const { data, setData, post, errors, reset } = useForm({
+        first_name: '',
+        middle_name: '',
+        last_name: '',
+        email: '',
+        contact: '',
+        password: '',
+        password_confirmation: '',
+    });
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -17,6 +28,21 @@ export default function UserIndex({ users, filters }: any) {
             preserveState: true,
             replace: true,
         });
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        post('/admin/users', {
+            onSuccess: () => {
+                setShowModal(false);
+                reset();
+            },
+        });
+    };
+
+    const openModal = () => {
+        reset();
+        setShowModal(true);
     };
 
     return (
@@ -48,7 +74,10 @@ export default function UserIndex({ users, filters }: any) {
                         <button className="p-3 bg-white/60 backdrop-blur-sm shadow-sm rounded-2xl hover:bg-white transition-all border border-white">
                             <Filter className="w-5 h-5 text-gray-600" />
                         </button>
-                        <button className="flex items-center gap-2 bg-[#246AFE] text-white px-6 py-3.5 rounded-2xl font-bold shadow-xl shadow-blue-500/30 hover:translate-y-[-2px] active:scale-95 transition-all">
+                        <button 
+                            onClick={openModal}
+                            className="flex items-center gap-2 bg-[#246AFE] text-white px-6 py-3.5 rounded-2xl font-bold shadow-xl shadow-blue-500/30 hover:translate-y-[-2px] active:scale-95 transition-all"
+                        >
                             <Plus className="w-5 h-5" />
                             <span>New User</span>
                         </button>
@@ -152,6 +181,173 @@ export default function UserIndex({ users, filters }: any) {
                     ))}
                 </div>
             </div>
+
+            {/* CREATE DOCTOR MODAL */}
+            <AnimatePresence>
+                {showModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center">
+                        {/* Backdrop */}
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowModal(false)}
+                            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+                        />
+                        
+                        {/* Modal */}
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4"
+                        >
+                            {/* Header */}
+                            <div className="flex items-center justify-between p-6 border-b border-gray-100">
+                                <div className="flex items-center gap-3">
+                                    <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#246AFE] to-blue-700 flex items-center justify-center text-white font-black shadow-lg">
+                                        <Stethoscope className="w-6 h-6" />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-xl font-black text-gray-900">Add New Doctor</h2>
+                                        <p className="text-sm text-gray-500 font-medium">Create a verified doctor account</p>
+                                    </div>
+                                </div>
+                                <button 
+                                    onClick={() => setShowModal(false)}
+                                    className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+                                >
+                                    <X className="w-5 h-5 text-gray-500" />
+                                </button>
+                            </div>
+
+                            {/* Form */}
+                            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    {/* First Name */}
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">First Name *</label>
+                                        <input
+                                            type="text"
+                                            value={data.first_name}
+                                            onChange={(e) => setData('first_name', e.target.value)}
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#246AFE]/20 focus:border-[#246AFE] outline-none transition-all font-medium"
+                                            placeholder="John"
+                                            required
+                                        />
+                                        {errors.first_name && <p className="text-red-500 text-xs">{errors.first_name}</p>}
+                                    </div>
+
+                                    {/* Middle Name */}
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Middle Name</label>
+                                        <input
+                                            type="text"
+                                            value={data.middle_name}
+                                            onChange={(e) => setData('middle_name', e.target.value)}
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#246AFE]/20 focus:border-[#246AFE] outline-none transition-all font-medium"
+                                            placeholder="M."
+                                        />
+                                    </div>
+
+                                    {/* Last Name */}
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Last Name *</label>
+                                        <input
+                                            type="text"
+                                            value={data.last_name}
+                                            onChange={(e) => setData('last_name', e.target.value)}
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#246AFE]/20 focus:border-[#246AFE] outline-none transition-all font-medium"
+                                            placeholder="Doe"
+                                            required
+                                        />
+                                        {errors.last_name && <p className="text-red-500 text-xs">{errors.last_name}</p>}
+                                    </div>
+                                </div>
+
+                                {/* Email */}
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Email Address *</label>
+                                    <div className="relative">
+                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                        <input
+                                            type="email"
+                                            value={data.email}
+                                            onChange={(e) => setData('email', e.target.value)}
+                                            className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#246AFE]/20 focus:border-[#246AFE] outline-none transition-all font-medium"
+                                            placeholder="doctor@clinic.com"
+                                            required
+                                        />
+                                    </div>
+                                    {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
+                                </div>
+
+                                {/* Contact */}
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Contact Number *</label>
+                                    <div className="relative">
+                                        <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                        <input
+                                            type="text"
+                                            value={data.contact}
+                                            onChange={(e) => setData('contact', e.target.value)}
+                                            className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#246AFE]/20 focus:border-[#246AFE] outline-none transition-all font-medium"
+                                            placeholder="+1 234 567 8900"
+                                            required
+                                        />
+                                    </div>
+                                    {errors.contact && <p className="text-red-500 text-xs">{errors.contact}</p>}
+                                </div>
+
+                                {/* Password */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Password *</label>
+                                        <input
+                                            type="password"
+                                            value={data.password}
+                                            onChange={(e) => setData('password', e.target.value)}
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#246AFE]/20 focus:border-[#246AFE] outline-none transition-all font-medium"
+                                            placeholder="••••••••"
+                                            required
+                                        />
+                                        {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Confirm Password *</label>
+                                        <input
+                                            type="password"
+                                            value={data.password_confirmation}
+                                            onChange={(e) => setData('password_confirmation', e.target.value)}
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#246AFE]/20 focus:border-[#246AFE] outline-none transition-all font-medium"
+                                            placeholder="••••••••"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Submit Button */}
+                                <div className="flex justify-end gap-3 pt-4">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowModal(false)}
+                                        className="px-6 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="px-6 py-3 bg-[#246AFE] text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 hover:translate-y-[-2px] active:scale-95 transition-all"
+                                    >
+                                        Create Doctor
+                                    </button>
+                                </div>
+                            </form>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </ClinicDashboardLayout>
     );
 }

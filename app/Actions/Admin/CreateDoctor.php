@@ -23,12 +23,10 @@ class CreateDoctor
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'contact' => ['required', 'string', 'max:20'],
-            'medical_field' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ], [
             'email.unique' => 'This email is already registered.',
             'password.confirmed' => 'The password confirmation does not match.',
-            'medical_field.required' => 'Medical field is required for doctors.',
         ])->validate();
 
         // Create doctor with pre-verified email
@@ -40,7 +38,6 @@ class CreateDoctor
             'contact' => $input['contact'],
             'password' => Hash::make($input['password']),
             'role' => 'doctor',
-            'medical_field' => $input['medical_field'],
             'email_verified_at' => now(), // Pre-verified as per requirement
         ]);
     }

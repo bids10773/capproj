@@ -19,6 +19,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     })->name('admin.dashboard');
     
     Route::get('/users', [UserController::class, 'index'])->name('admin.users');
+    Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
 });
 
 // 2. Standard User Routes

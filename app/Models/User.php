@@ -19,7 +19,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'contact',
         'password',
-        'role', // optional if you have roles
+        'role',
+        'medical_field',
     ];
 
     protected $hidden = [
@@ -49,5 +50,5 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getFullNameAttribute(): string
     {
         return trim("{$this->first_name} {$this->middle_name} {$this->last_name}");
-    }
+          }
 }
